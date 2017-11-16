@@ -2,7 +2,7 @@ jQuery(function($) {
   "use strict";
 
   var ekispertDomain = "https://api.ekispert.jp"
-  var ekispertAccessKey = "wC4SR9ETBhBcJ3Bv"
+  var ekispertAccessKey = ""
 
 
   function toArray(obj) {
