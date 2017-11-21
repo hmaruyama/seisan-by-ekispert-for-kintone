@@ -8,7 +8,19 @@ jQuery(function($) {
 
 var stationDeparturePart;
 var stationArrivalPart;
+var courseResult;
 var inputOptions;
+
+function init(){
+  stationDeparturePart = new expGuiStation(document.getElementById("input-departure-station"));
+  stationDeparturePart.setConfigure("ssl", true);
+  stationDeparturePart.dispStation();
+  stationArrivalPart = new expGuiStation(document.getElementById("input-arrival-station"));
+  stationArrivalPart.setConfigure("ssl", true);
+  stationArrivalPart.dispStation();
+  // courseResult = new expGuiCourse(document.getElementById("result"));
+  // courseResult.setConfigure("ssl", true);
+}
 
   $('#button').click(function() {
 
@@ -36,12 +48,6 @@ var inputOptions;
         })
       },
       onOpen: function () {
-        function init(){
-          stationDeparturePart = new expGuiStation(document.getElementById("input-departure-station"));
-          stationDeparturePart.dispStation();
-          stationArrivalPart = new expGuiStation(document.getElementById("input-arrival-station"));
-          stationArrivalPart.dispStation();
-        }
         init();
       }
     }).then(function (result) {
