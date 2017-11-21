@@ -14,8 +14,8 @@ var stationArrivalPart;
     swal({
       title: "駅を入力してください",
       showCancelButton: true,
-      html:'出発<div id="input-departure-station" class="swal2-input"></div>' +'到着<div id="input-arrival-station" class="swal2-input"></div>',
-      preConfirm: function (email) {
+      html:'出発<div id="input-departure-station"></div>' +'到着<div id="input-arrival-station"></div>',
+      preConfirm: function () {
         return new Promise(function (resolve, reject) {
 
           setTimeout(function() {
@@ -37,7 +37,6 @@ var stationArrivalPart;
           stationArrivalPart.dispStation();
         }
         init();
-        $('#input-departure-station').focus()
       }
     }).then(function (result) {
       swal({
