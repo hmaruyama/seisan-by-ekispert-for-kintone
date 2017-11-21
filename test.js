@@ -1,31 +1,26 @@
 jQuery(function($) {
   "use strict";
 
-
-  var ekispertDomain = "https://api.ekispert.jp"
-  var ekispertAccessKey = ""
-
   function toArray(obj) {
     if (!Array.isArray(obj)) { return [obj] }
     else { return obj }
   }
 
+var stationDeparturePart;
+var stationArrivalPart;
+
   $('#button').click(function() {
 
     swal({
       title: "駅を入力してください",
-      html:
-        '出発<div id="input-departure-station">' + '<br>' +
-        '到着<input id="input-arrival-station">',
+      showCancelButton: true,
+      html:'出発<div id="input-departure-station" class="swal2-input"></div>' +'到着<div id="input-arrival-station" class="swal2-input"></div>',
       preConfirm: function (email) {
         return new Promise(function (resolve, reject) {
 
-          // window.onload = function() {
-          //   init();
-          // }
           setTimeout(function() {
-            var departureStation = $('#input-departure-station').val();
-            var arrivalStation = $('#input-arrival-station').val();
+            var departureStation = stationDeparturePart.getStationCode();
+            var arrivalStation = stationArrivalPart.getStationCode();
             if (!departureStation || !arrivalStation) {
               reject('駅を入力してください。')
             } else {
@@ -35,12 +30,11 @@ jQuery(function($) {
         })
       },
       onOpen: function () {
-        console.log("bbb");
-        var stationApp;
         function init(){
-          console.log("aaa")
-          stationApp = new expGuiStation(document.getElementById("input-departure-station"));
-          stationApp.dispStation();
+          stationDeparturePart = new expGuiStation(document.getElementById("input-departure-station"));
+          stationDeparturePart.dispStation();
+          stationArrivalPart = new expGuiStation(document.getElementById("input-arrival-station"));
+          stationArrivalPart.dispStation();
         }
         init();
         $('#input-departure-station').focus()
@@ -51,15 +45,5 @@ jQuery(function($) {
         html: '選択を受け付けました！'
       })
     }).catch(swal.noop)
-
-
-    var stationApp;
-    function init(){
-      stationApp = new expGuiStation(document.getElementById("departure-station"));
-      stationApp.dispStation();
-    }
-    window.onload = function() {
-      init();
-    }
   })
 });
