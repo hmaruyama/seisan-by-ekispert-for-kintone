@@ -1,10 +1,6 @@
 jQuery(function($) {
   "use strict";
 
-  var ekispertDomain = "https://api.ekispert.jp"
-  var ekispertAccessKey = ""
-
-
   function toArray(obj) {
     if (!Array.isArray(obj)) { return [obj] }
     else { return obj }
@@ -17,102 +13,64 @@ jQuery(function($) {
 
     var mySpaceFieldButton = document.createElement('button');
     mySpaceFieldButton.id = 'my_space_field_button';
-    mySpaceFieldButton.innerHTML = '経路を探索する';
+    mySpaceFieldButton.innerHTML = '経路を探索する!';
 
 
     mySpaceFieldButton.onclick = function () {
+      console.log("aaa");
+      var stationDeparturePart;
+      var stationArrivalPart;
+      var courseResult;
+      var inputOptions;
 
-      var record = kintone.app.record.get();
-      console.log("record: " + JSON.stringify(record));
-      var stationDeparture = record.record.station_departure.value;
-      var stationArrival = record.record.station_arrival.value;
+      function init(){
+        stationDeparturePart = new expGuiStation(document.getElementById("input-departure-station"));
+        stationDeparturePart.setConfigure("ssl", true);
+        stationDeparturePart.dispStation();
+        stationArrivalPart = new expGuiStation(document.getElementById("input-arrival-station"));
+        stationArrivalPart.setConfigure("ssl", true);
+        stationArrivalPart.dispStation();
+        // courseResult = new expGuiCourse(document.getElementById("result"));
+        // courseResult.setConfigure("ssl", true);
+      }
 
-      var stationDepartureRequestParams = {
-        "key": ekispertAccessKey,
-        "name": stationDeparture
-      };
 
-      var stationArrivalRequestParams = {
-        "key": ekispertAccessKey,
-        "name": stationArrival
-      };
+      swal({
+        title: "駅を入力してください",
+        showCancelButton: true,
+        html:'出発<div id="input-departure-station"></div>' +'到着<div id="input-arrival-station"></div>',
+        preConfirm: function () {
+          return new Promise(function (resolve, reject) {
 
-     $.get(ekispertDomain + "/v1/json/station", stationDepartureRequestParams, function(data){})
-     .done(function(data) {
-        var departurePoints = toArray(JSON.parse(data).ResultSet.Point);
-
-        $.get(ekispertDomain + "/v1/json/station", stationArrivalRequestParams, function(data){})
-        .done(function(data) {
-          var arrivalPoints = toArray(JSON.parse(data).ResultSet.Point);
-          var routeSearchRequestParams = {
-            "key": ekispertAccessKey,
-            "viaList": departurePoints[0].Station.Name + ":" + arrivalPoints[0].Station.Name,
-            "searchType": "plain"
-          }
-
-          $.get(ekispertDomain + "/v1/json/search/course/extreme", routeSearchRequestParams, function(data){})
-          .done(function(data) {
-            var course = JSON.parse(data).ResultSet.Course;
-
-            var routeStrings = [];
-            for(var i = 0; i < course.length; i++) {
-              routeStrings[i] = ""
-              // 経路を文字列で表現
-              var route = course[i].Route;
-              for(var j = 0; j < route.Point.length; j++) {
-                routeStrings[i] += route.Point[j].Station.Name;
-                var lines = toArray(route.Line);
-                if(lines[j]) {
-                  routeStrings[i] += "→" + lines[j].Name + "→";
+            setTimeout(function() {
+              var departureStationCode = stationDeparturePart.getStationCode();
+              var arrivalStationCode = stationArrivalPart.getStationCode();
+              if (!departureStationCode || !arrivalStationCode) {
+                reject('駅が選択されていないようです。')
+              } else {
+                inputOptions = {
+                  "aaa": "aaa",
+                  "bbb": "bbb",
+                  "ccc": "ccc"
                 }
+                resolve([ departureStationCode, arrivalStationCode ])
               }
-            }
-
-            var resolveObj = {}
-            for(var i = 0; i < routeStrings.length; i++) {
-              resolveObj['route' + i] = routeStrings[i] + "<br><br>";
-            }
-
-
-            var inputOptions = new Promise(function (resolve) {
-              setTimeout(function () {
-                resolve(resolveObj)
-              }, 2000)
-            })
-
-            swal({
-              title: '経路を選択してください',
-              input: 'radio',
-              inputOptions: inputOptions,
-              inputValidator: function (result) {
-                return new Promise(function (resolve, reject) {
-                  if (result) {
-                    resolve()
-                  } else {
-                    reject('選択されていません')
-                  }
-                })
-              }
-            }).then(function (result) {
-              swal({
-                type: 'success',
-                html: '選択を受け付けました！'
-              })
-            })
+            }, 500)
           })
-          .fail(function(jqXHR, textStatus, errorThrown) {
-            var errorMessage = JSON.parse(jqXHR.responseText).ResultSet.Error.Message;
-            alert(errorMessage);
+        },
+        onOpen: function () {
+          init();
+        }
+      }).then(function (result) {
+        swal({
+          html: '経路を選択してください',
+          input: 'radio',
+          inputOptions: inputOptions
+        }).then(function (result) {
+          swal({
+            html: '受け付けました！'
           })
         })
-        .fail(function(jqXHR, textStatus, errorThrown) {
-          var errorMessage = JSON.parse(jqXHR.responseText).ResultSet.Error.Message;
-          alert(errorMessage);
-        })
-      })
-      .fail(function(jqXHR, textStatus, errorThrown) {
-        var errorMessage = JSON.parse(jqXHR.responseText).ResultSet.Error.Message;
-        alert(errorMessage);
       })
     }
     kintone.app.record.getSpaceElement('my_space_field').appendChild(mySpaceFieldButton);
