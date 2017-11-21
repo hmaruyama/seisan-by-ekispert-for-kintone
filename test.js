@@ -8,6 +8,7 @@ jQuery(function($) {
 
 var stationDeparturePart;
 var stationArrivalPart;
+var inputOptions;
 
   $('#button').click(function() {
 
@@ -22,8 +23,13 @@ var stationArrivalPart;
             var departureStation = stationDeparturePart.getStationCode();
             var arrivalStation = stationArrivalPart.getStationCode();
             if (!departureStation || !arrivalStation) {
-              reject('駅を入力してください。')
+              reject('駅が選択されていないようです。')
             } else {
+              inputOptions = {
+                "aaa": "aaa",
+                "bbb": "bbb",
+                "ccc": "ccc"
+              }
               resolve([ departureStation, arrivalStation ])
             }
           }, 500)
@@ -40,9 +46,14 @@ var stationArrivalPart;
       }
     }).then(function (result) {
       swal({
-        type: "success",
-        html: '選択を受け付けました！'
+        html: '経路を選択してください',
+        input: 'radio',
+        inputOptions: inputOptions
+      }).then(function (result) {
+        swal({
+          html: '受け付けました！'
+        })
       })
-    }).catch(swal.noop)
+    })
   })
 });
