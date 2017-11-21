@@ -20,9 +20,9 @@ var inputOptions;
         return new Promise(function (resolve, reject) {
 
           setTimeout(function() {
-            var departureStation = stationDeparturePart.getStationCode();
-            var arrivalStation = stationArrivalPart.getStationCode();
-            if (!departureStation || !arrivalStation) {
+            var departureStationCode = stationDeparturePart.getStationCode();
+            var arrivalStationCode = stationArrivalPart.getStationCode();
+            if (!departureStationCode || !arrivalStationCode) {
               reject('駅が選択されていないようです。')
             } else {
               inputOptions = {
@@ -30,7 +30,7 @@ var inputOptions;
                 "bbb": "bbb",
                 "ccc": "ccc"
               }
-              resolve([ departureStation, arrivalStation ])
+              resolve([ departureStationCode, arrivalStationCode ])
             }
           }, 500)
         })
