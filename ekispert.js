@@ -41,6 +41,10 @@ jQuery(function($) {
     kintone.app.record.set(rec);
   }
 
+  kintone.events.on('app.record.edit.change.入力方法', function(event) {
+    alert("入力方法が切り替わった！");
+  });
+
   kintone.events.on(['app.record.edit.show', 'app.record.create.show'], function(event) {
 
 
