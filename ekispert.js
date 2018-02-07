@@ -42,7 +42,13 @@ jQuery(function($) {
   }
 
   kintone.events.on('app.record.edit.change.入力方法', function(event) {
-    alert("入力方法が切り替わった！");
+    for(var i = 0; i < event.record['明細'].value.length; i++) {
+      var tableRecord = event.record['明細'].value;
+      if(tableRecord[i].value['入力方法'].value == '駅すぱあと') {
+        tableRecord[i].value['金額'].disabled = true;
+        tableRecord[i].value['経路'].disabled = true;
+      }
+    }
   });
 
   kintone.events.on(['app.record.edit.show', 'app.record.create.show'], function(event) {
