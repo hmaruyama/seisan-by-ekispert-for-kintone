@@ -42,13 +42,12 @@ jQuery(function($) {
   }
 
   kintone.events.on('app.record.edit.change.入力方法', function(event) {
-    for(var i = 0; i < event.record['明細'].value.length; i++) {
-      var tableRecord = event.record['明細'].value;
-      if(tableRecord[i].value['入力方法'].value == '駅すぱあと') {
-        tableRecord[i].value['金額'].disabled = true;
-        tableRecord[i].value['経路'].disabled = true;
-      }
+    var changeRow = event.changes.row;
+    if(changeRow.value['入力方法'].value == "駅すぱあと" ) {
+      changeRow.value['経路'].disabled = true;
+      changeRow.value['金額'].disabled = true;
     }
+    return event;
   });
 
   kintone.events.on(['app.record.edit.show', 'app.record.create.show'], function(event) {
