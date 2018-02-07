@@ -41,11 +41,14 @@ jQuery(function($) {
     kintone.app.record.set(rec);
   }
 
-  kintone.events.on('app.record.edit.change.入力方法', function(event) {
+  kintone.events.on(['app.record.edit.change.入力方法', 'app.record.create.change.入力方法'], function(event) {
     var changeRow = event.changes.row;
     if(changeRow.value['入力方法'].value == "駅すぱあと" ) {
       changeRow.value['経路'].disabled = true;
       changeRow.value['金額'].disabled = true;
+    } else { // 入力方法 == "手入力" の場合
+      changeRow.value['経路'].disabled = false;
+      changeRow.value['金額'].disabled = false;
     }
     return event;
   });
@@ -79,8 +82,6 @@ jQuery(function($) {
         swal({
           title: "駅を入力してください",
           html:'出発<div id="input-dep-station"></div>到着<div id="input-arr-station"></div><div id="course-result" style="display:none;">',
-          width: 1000,
-          height: 600,
           onOpen: function () {
             // 出発駅
             depStationPart = new expGuiStation(document.getElementById("input-dep-station"));
@@ -146,7 +147,6 @@ jQuery(function($) {
           }
           swal({
             title: '経路を選択してください',
-            width: 1000,
             input: 'radio',
             inputOptions: inputOptions,
             inputValidator: function(value) {
