@@ -79,6 +79,7 @@ jQuery(function($) {
         swal({
           title: "駅を入力してください",
           html:'出発<div id="input-dep-station"></div>到着<div id="input-arr-station"></div><div id="course-result" style="display:none;">',
+          width: 1000,
           onOpen: function () {
             // 出発駅
             depStationPart = new expGuiStation(document.getElementById("input-dep-station"));
