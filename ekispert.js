@@ -2,7 +2,11 @@ jQuery(function($) {
   "use strict";
 
   kintone.events.on(['app.record.edit.change.明細', 'app.record.create.change.明細', 'app.record.create.show'], function(event) {
-    alert('aaa');
+    var table = evnet.record['明細'].value;
+    for (var i = 0; i < table.length; i++) {
+      table[i].value['隠しパラメータ'].disabled = true;
+    }
+    return event;
   });
 
   kintone.events.on(['app.record.edit.change.入力方法', 'app.record.create.change.入力方法'], function(event) {
