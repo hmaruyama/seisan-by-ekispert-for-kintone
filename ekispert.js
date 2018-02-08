@@ -1,6 +1,10 @@
 jQuery(function($) {
   "use strict";
 
+  kintone.events.on(['app.record.edit.change.明細', 'app.record.create.change.明細', 'app.record.create.show'], function(event) {
+    alert('aaa');
+  });
+
   kintone.events.on(['app.record.edit.change.入力方法', 'app.record.create.change.入力方法'], function(event) {
     var changeRow = event.changes.row;
     if(changeRow.value['入力方法'].value == "駅すぱあと" ) {
