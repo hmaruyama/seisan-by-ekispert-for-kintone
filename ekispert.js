@@ -19,21 +19,16 @@ jQuery(function($) {
     if(changeRow.value['入力方法'].value == "駅すぱあと") {
       // 編集中のテーブル行をマーク
       changeRow.value['隠しパラメータ'].value = "true";
-      return event;
     } else { // 入力方法 == "手入力" の場合
       changeRow.value['経路'].disabled = false;
       changeRow.value['金額'].disabled = false;
-      return event;
     }
-
+    return event;
   });
 
   kintone.events.on(['app.record.edit.change.隠しパラメータ', 'app.record.create.change.隠しパラメータ'], function(event) {
     var changeRow = event.changes.row;
-    if(!changeRow.value['隠しパラメータ'].value) {
-      return;
-    }
-    if(changeRow.value['入力方法'].value == "駅すぱあと" ) {
+    if(changeRow.value['隠しパラメータ'].value) {
 
       var depStationPart;
       var arrStationPart;
@@ -63,9 +58,7 @@ jQuery(function($) {
         },
         preConfirm: function () {
           return new Promise(function (resolve) {
-            depStation.name = depStationPart.getStationName();
             depStation.code = depStationPart.getStationCode();
-            arrStation.name = arrStationPart.getStationName();
             arrStation.code = arrStationPart.getStationCode();
             if (!depStation.code || !arrStation.code) {
               swal.showValidationError("駅を選択してください。");
@@ -166,10 +159,6 @@ jQuery(function($) {
           kintone.app.record.set(rec);
         })
       })
-    } else { // 入力方法 == "手入力" の場合
-      changeRow.value['経路'].disabled = false;
-      changeRow.value['金額'].disabled = false;
-      return event;
     }
   });
 });
