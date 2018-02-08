@@ -5,6 +5,10 @@ jQuery(function($) {
     var table = event.record['明細'].value;
     for (var i = 0; i < table.length; i++) {
       table[i].value['隠しパラメータ'].disabled = true;
+      if(table[i].value['入力方法'].value == "駅すぱあと") {
+        table[i].value['経路'].disabled = true;
+        table[i].value['金額'].disabled = true;
+      }
     }
     return event;
   });
