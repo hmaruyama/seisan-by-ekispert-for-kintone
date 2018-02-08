@@ -10,11 +10,13 @@ jQuery(function($) {
   });
 
   kintone.events.on(['app.record.edit.change.入力方法', 'app.record.create.change.入力方法'], function(event) {
-    var changeRow = event.changes.row;
 
-    // 編集中のテーブル行をマーク
-    changeRow.value['隠しパラメータ'].value = "true";
-    return event;
+    var changeRow = event.changes.row;
+    if(changeRow.value['入力方法'].value == "駅すぱあと") {
+      // 編集中のテーブル行をマーク
+      changeRow.value['隠しパラメータ'].value = "true";
+      return event;
+    }
   });
 
   kintone.events.on(['app.record.edit.change.隠しパラメータ', 'app.record.create.change.隠しパラメータ'], function(event) {
