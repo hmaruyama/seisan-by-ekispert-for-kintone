@@ -16,7 +16,12 @@ jQuery(function($) {
       // 編集中のテーブル行をマーク
       changeRow.value['隠しパラメータ'].value = "true";
       return event;
+    } else { // 入力方法 == "手入力" の場合
+      changeRow.value['経路'].disabled = false;
+      changeRow.value['金額'].disabled = false;
+      return event;
     }
+
   });
 
   kintone.events.on(['app.record.edit.change.隠しパラメータ', 'app.record.create.change.隠しパラメータ'], function(event) {
