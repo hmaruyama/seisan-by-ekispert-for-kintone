@@ -13,7 +13,7 @@ jQuery(function($) {
     var changeRow = event.changes.row;
 
     // 編集中のテーブル行をマーク
-    changeRow.value['隠しパラメータ'].value = ['チェック'];
+    changeRow.value['隠しパラメータ'].value = "true";
     return event;
   });
 
@@ -99,9 +99,9 @@ jQuery(function($) {
           var tableRecord = rec.record['明細'].value;
 
           for(var i = 0; i < tableRecord.length; i++) {
-            if(tableRecord[i].value['隠しパラメータ'].value == ['チェック']) {
+            if(tableRecord[i].value['隠しパラメータ'].value == "true") {
               tableRecord[i].value['入力方法'].value = "手入力";
-              tableRecord[i].value['隠しパラメータ'].value = [];
+              tableRecord[i].value['隠しパラメータ'].value = "";
             }
           }
           kintone.app.record.set(rec);
@@ -122,9 +122,9 @@ jQuery(function($) {
             var tableRecord = rec.record['明細'].value;
 
             for(var i = 0; i < tableRecord.length; i++) {
-              if(tableRecord[i].value['隠しパラメータ'].value == ['チェック']) {
+              if(tableRecord[i].value['隠しパラメータ'].value == "true") {
                 tableRecord[i].value['入力方法'].value = "手入力";
-                tableRecord[i].value['隠しパラメータ'].value = [];
+                tableRecord[i].value['隠しパラメータ'].value = "";
               }
             }
             kintone.app.record.set(rec);
@@ -141,10 +141,10 @@ jQuery(function($) {
           var tableRecord = rec.record['明細'].value;
 
           for(var i = 0; i < tableRecord.length; i++) {
-            if(tableRecord[i].value['隠しパラメータ'].value == ['チェック']) {
+            if(tableRecord[i].value['隠しパラメータ'].value == "true") {
               tableRecord[i].value['経路'].value = selectRoutes[result.value].route;
               tableRecord[i].value['金額'].value = selectRoutes[result.value].price;
-              tableRecord[i].value['隠しパラメータ'].value = [];
+              tableRecord[i].value['隠しパラメータ'].value = "";
               tableRecord[i].value['経路'].disabled = true;
               tableRecord[i].value['金額'].disabled = true;
             }
