@@ -1,11 +1,6 @@
 jQuery(function($) {
   "use strict";
 
-  function toArray(obj) {
-    if (!Array.isArray(obj)) { return [obj] }
-    else { return obj }
-  }
-
   kintone.events.on(['app.record.edit.change.入力方法', 'app.record.create.change.入力方法'], function(event) {
     var changeRow = event.changes.row;
     if(changeRow.value['入力方法'].value == "駅すぱあと" ) {
@@ -147,17 +142,5 @@ jQuery(function($) {
       changeRow.value['金額'].disabled = false;
       return event;
     }
-  });
-
-  kintone.events.on(['app.record.edit.show', 'app.record.create.show'], function(event) {
-    // テーブル内編集不可処理
-    for(var i = 0; i < event.record['明細'].value.length; i++) {
-      var tableRecord = event.record['明細'].value;
-      if(tableRecord[i].value['入力方法'].value == '駅すぱあと') {
-        tableRecord[i].value['金額'].disabled = true;
-        tableRecord[i].value['経路'].disabled = true;
-      }
-    }
-    return event;
   });
 });
