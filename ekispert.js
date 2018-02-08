@@ -85,8 +85,6 @@ jQuery(function($) {
           for(var i = 0; i < tableRecord.length; i++) {
             if(tableRecord[i].id == changeRow.id) {
               tableRecord[i].value['入力方法'].value = "手入力";
-              tableRecord[i].value['経路'].disabled = false;
-              tableRecord[i].value['金額'].disabled = false;
             }
           }
           kintone.app.record.set(rec);
@@ -109,8 +107,6 @@ jQuery(function($) {
             for(var i = 0; i < tableRecord.length; i++) {
               if(tableRecord[i].id == changeRow.id) {
                 tableRecord[i].value['入力方法'].value = "手入力";
-                tableRecord[i].value['経路'].disabled = false;
-                tableRecord[i].value['金額'].disabled = false;
               }
             }
             kintone.app.record.set(rec);
