@@ -54,12 +54,12 @@ kintone内に、新しくアプリを作成します。
 
 * https://js.cybozu.com/jquery/3.2.1/jquery.min.js
 * https://js.cybozu.com/sweetalert2/v7.3.5/sweetalert2.min.js
-* https://cdn.rawgit.com/EkispertWebService/GUI/master/expGuiStation/expGuiStation.js?key=駅すぱあとwebサービスのアクセスキー
-* https://cdn.rawgit.com/EkispertWebService/GUI/master/expGuiCourse/expGuiCourse.js?key=駅すぱあとwebサービスのアクセスキー
-* https://rawgit.com/hmaruyama/kintone-handson/master/ekispert.js
+* https://cdn.rawgit.com/EkispertWebService/GUI/ed686b9d12d/expGuiStation/expGuiStation.js?key=駅すぱあとwebサービスのアクセスキー
+* https://cdn.rawgit.com/EkispertWebService/GUI/ed686b9d12d/expGuiCourse/expGuiCourse.js?key=駅すぱあとwebサービスのアクセスキー
+* https://cdn.rawgit.com/hmaruyama/kintone-handson/master/ekispert.js
 
 #### CSS
 
 * https://js.cybozu.com/sweetalert2/v7.3.5/sweetalert2.min.css
-* https://cdn.rawgit.com/EkispertWebService/GUI/master/expGuiStation/expCss/expGuiStation.css
-* https://cdn.rawgit.com/EkispertWebService/GUI/master/expGuiCourse/expCss/expGuiCourse.css
+* https://cdn.rawgit.com/EkispertWebService/GUI/ed686b9d12d/expGuiStation/expCss/expGuiStation.css
+* https://cdn.rawgit.com/EkispertWebService/GUI/ed686b9d12d/expGuiCourse/expCss/expGuiCourse.css
