@@ -2,6 +2,11 @@ jQuery(function($) {
   "use strict";
 
   kintone.events.on(['app.record.edit.change.明細', 'app.record.create.change.明細', 'app.record.create.show', 'app.record.edit.show'], function(event) {
+
+    // 隠しパラメータ項目のDOMを削除
+    $(".label-5125682").remove();
+    $(".field-5125682").remove();
+
     var table = event.record['明細'].value;
     for (var i = 0; i < table.length; i++) {
       table[i].value['隠しパラメータ'].disabled = true;
