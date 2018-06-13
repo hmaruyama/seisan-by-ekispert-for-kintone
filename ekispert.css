@@ -1,3 +1,4 @@
-.subtable-gaia.show-subtable-gaia td:nth-child(6) {
+.subtable-gaia.show-subtable-gaia th:nth-child(1),
+.subtable-gaia.show-subtable-gaia td:nth-child(1) {
   display: none;
 }
