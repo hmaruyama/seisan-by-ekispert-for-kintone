@@ -5,10 +5,6 @@ jQuery(function($) {
   kintone.events.on(['app.record.detail.show'], function(event) {
     // 隠しパラメータ項目のDOMを削除
     $(".label-5125682").remove();
-    $('div.field-5125682').parent().remove();
-    $('div.field-5125682').parent().css('display', 'none');
-    console.log("aaa");
-    alert("aaa");
   });
 
   kintone.events.on(['app.record.edit.change.明細', 'app.record.create.change.明細', 'app.record.create.show', 'app.record.edit.show'], function(event) {
