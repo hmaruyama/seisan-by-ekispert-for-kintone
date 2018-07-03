@@ -28,6 +28,7 @@ jQuery(function($) {
 
   kintone.events.on(['app.record.edit.change.隠しパラメータ', 'app.record.create.change.隠しパラメータ'], function(event) {
     var changeRow = event.changes.row;
+    var date = changeRow.value['日付'].value.replace(/-/g, '');
     if(changeRow.value['隠しパラメータ'].value) {
 
       var condition;
@@ -71,9 +72,9 @@ jQuery(function($) {
               resolve();
               return;
             }
-
             var searchObject = courseResult.createSearchInterface();
             searchObject.setAnswerCount(condition.getAnswerCount());
+            searchObject.setDate(date);
             searchObject.setSort(condition.getSortType());
             searchObject.setSearchType('plain');
             searchObject.setConditionDetail(condition.getConditionDetail());
