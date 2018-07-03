@@ -77,6 +77,7 @@ jQuery(function($) {
             searchObject.setSearchType('plain');
             searchObject.setConditionDetail(condition.getConditionDetail());
             searchObject.setViaList(depStation.code + ':' + arrStation.code);
+            searchObject.setAssignDetailRoute('相模原:ＪＲ横浜線:Down:八王子:ＪＲ中央線快速:Up:高円寺');
             courseResult.search(searchObject, function(isSuccess) {
               if(!isSuccess){
                 swal.showValidationError("探索結果が取得できませんでした");
