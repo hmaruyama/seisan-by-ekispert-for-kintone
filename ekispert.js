@@ -72,8 +72,10 @@ jQuery(function($) {
               return;
             }
             var searchObject = courseResult.createSearchInterface();
-            searchObject.setAnswerCount(3);
+            searchObject.setAnswerCount(condition.getAnswerCount());
+            searchObject.setSort(condition.getSortType());
             searchObject.setSearchType('plain');
+            searchObject.setConditionDetail(condition.getConditionDetail());
             searchObject.setViaList(depStation.code + ':' + arrStation.code);
             courseResult.search(searchObject, function(isSuccess) {
               if(!isSuccess){
