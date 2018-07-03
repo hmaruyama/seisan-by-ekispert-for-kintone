@@ -1,3 +1,11 @@
-.exp_clearfix {
+div#condition {
+  font-size: smaller;
+}
+
+div#input-dep-station {
+  font-size: smaller;
+}
+
+div#input-arr-station {
   font-size: smaller;
 }
