@@ -30,6 +30,7 @@ jQuery(function($) {
     var changeRow = event.changes.row;
     if(changeRow.value['隠しパラメータ'].value) {
 
+      var condition;
       var depStationPart;
       var arrStationPart;
       var courseResult;
@@ -40,8 +41,13 @@ jQuery(function($) {
 
       swal({
         title: "駅を入力してください",
-        html:'出発<div id="input-dep-station"></div>到着<div id="input-arr-station"></div><div id="course-result" style="display:none;">',
+        html:'探索条件<div id="condition"></div>出発<div id="input-dep-station"></div>到着<div id="input-arr-station"></div><div id="course-result" style="display:none;">',
         onOpen: function () {
+          // 探索条件
+          condition = new expGuiCondition(document.getElementById("condition"));
+          condition.setConfigure("ssl", true);
+          condition.dispCondition();
+
           // 出発駅
           depStationPart = new expGuiStation(document.getElementById("input-dep-station"));
           depStationPart.setConfigure("ssl", true);
