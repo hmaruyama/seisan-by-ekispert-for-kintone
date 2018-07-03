@@ -41,7 +41,9 @@ jQuery(function($) {
 
       swal({
         title: "駅を入力してください",
-        html:'探索条件<div id="condition"></div>出発<div id="input-dep-station"></div>到着<div id="input-arr-station"></div><div id="course-result" style="display:none;">',
+        imageWidth: 500,
+        imageHeight: 550,
+        html:'<div id="condition"></div>出発<div id="input-dep-station"></div>到着<div id="input-arr-station"></div><div id="course-result" style="display:none;">',
         onOpen: function () {
           // 探索条件
           condition = new expGuiCondition(document.getElementById("condition"));
