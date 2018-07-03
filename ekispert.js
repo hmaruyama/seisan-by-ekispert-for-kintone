@@ -71,13 +71,16 @@ jQuery(function($) {
               resolve();
               return;
             }
+
             var searchObject = courseResult.createSearchInterface();
             searchObject.setAnswerCount(condition.getAnswerCount());
             searchObject.setSort(condition.getSortType());
             searchObject.setSearchType('plain');
             searchObject.setConditionDetail(condition.getConditionDetail());
             searchObject.setViaList(depStation.code + ':' + arrStation.code);
-            searchObject.setAssignDetailRoute('相模原:ＪＲ横浜線:Down:八王子:ＪＲ中央線快速:Up:高円寺');
+            if (kintone.app.record.get().record['通勤経路'].value) { // 通勤経路項目に値が入っていれば定期割り当てを行う
+              searchObject.setAssignDetailRoute(kintone.app.record.get().record['通勤経路'].value);
+            }
             courseResult.search(searchObject, function(isSuccess) {
               if(!isSuccess){
                 swal.showValidationError("探索結果が取得できませんでした");
