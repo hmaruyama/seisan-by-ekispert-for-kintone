@@ -26,6 +26,7 @@ jQuery(function($) {
   });
 
   kintone.events.on(['app.record.edit.change.隠しパラメータ', 'app.record.create.change.隠しパラメータ'], function(event) {
+
     var changeRow = event.changes.row;
     var date = changeRow.value['日付'].value.replace(/-/g, '');
     if(!changeRow.value['隠しパラメータ'].value) { return; }
@@ -88,6 +89,11 @@ jQuery(function($) {
           if (courseTeiki) { // 通勤経路項目に値が入っていれば定期割り当てを行う
             searchObject.setAssignDetailRoute(courseTeiki);
           }
+          courseResult.bind('select', function() {
+            alert("経路が選択されました" + aaa);
+            alert(courseResult.getResultNo());
+            alert(courseResult.getResult());
+          });
           courseResult.search(searchObject, function(isSuccess) {
             if(!isSuccess){
               swal.showValidationError("探索結果が取得できませんでした");
@@ -114,28 +120,28 @@ jQuery(function($) {
         kintone.app.record.set(rec);
         return;
       }
-
-      courseResult.bind('select', function(aaa) {
-        alert("経路が選択されました" + aaa);
-        alert(courseResult.getResultNo());
-        alert(courseResult.getResult());
-        courseResult.changeCourse(courseResult.getResultNo());
-        var onewayPrice = courseResult.getPrice(courseResult.PRICE_ONEWAY);
-        var pointList = courseResult.getPointList().split(',');
-        var lineList = courseResult.getLineList().split(',');
-        var routeStr = "";
-        for (var j = 0; j < pointList.length; j++) {
-          if (lineList[j]) {
-            routeStr += pointList[j] + " - [" + lineList[j] + "] - "
-          } else {
-            routeStr += pointList[j]
-          }
-        }
-        selectRoutes = {
-          route: routeStr,
-          price: onewayPrice
-        }
-      })
+      //
+      // courseResult.bind('select', function(aaa) {
+      //   alert("経路が選択されました" + aaa);
+      //   alert(courseResult.getResultNo());
+      //   alert(courseResult.getResult());
+      //   courseResult.changeCourse(courseResult.getResultNo());
+      //   var onewayPrice = courseResult.getPrice(courseResult.PRICE_ONEWAY);
+      //   var pointList = courseResult.getPointList().split(',');
+      //   var lineList = courseResult.getLineList().split(',');
+      //   var routeStr = "";
+      //   for (var j = 0; j < pointList.length; j++) {
+      //     if (lineList[j]) {
+      //       routeStr += pointList[j] + " - [" + lineList[j] + "] - "
+      //     } else {
+      //       routeStr += pointList[j]
+      //     }
+      //   }
+      //   selectRoute = {
+      //     route: routeStr,
+      //     price: onewayPrice
+      //   }
+      // })
 
 
       //
@@ -165,26 +171,30 @@ jQuery(function($) {
 
 
 
-        swal({
-          title: '受け付けました！',
-          type: "success"
-        })
+        // swal({
+        //   title: '受け付けました！',
+        //   type: "success"
+        // })
 
         // テーブル値の更新
-        var rec = kintone.app.record.get();
-        var tableRecord = rec.record['明細'].value;
+        // var rec = kintone.app.record.get();
+        // var tableRecord = rec.record['明細'].value;
+        //
+        // for(var i = 0; i < tableRecord.length; i++) {
+        //   if(tableRecord[i].value['隠しパラメータ'].value == "true") {
+        //     tableRecord[i].value['経路'].value = selectRoutes[result.value].route;
+        //     tableRecord[i].value['金額'].value = selectRoutes[result.value].price;
+        //     tableRecord[i].value['隠しパラメータ'].value = "";
+        //     tableRecord[i].value['経路'].disabled = true;
+        //     tableRecord[i].value['金額'].disabled = true;
+        //   }
+        // }
+        // kintone.app.record.set(rec);
 
-        for(var i = 0; i < tableRecord.length; i++) {
-          if(tableRecord[i].value['隠しパラメータ'].value == "true") {
-            tableRecord[i].value['経路'].value = selectRoutes[result.value].route;
-            tableRecord[i].value['金額'].value = selectRoutes[result.value].price;
-            tableRecord[i].value['隠しパラメータ'].value = "";
-            tableRecord[i].value['経路'].disabled = true;
-            tableRecord[i].value['金額'].disabled = true;
-          }
-        }
-        kintone.app.record.set(rec);
+
       // })
+
+
     })
   });
 });
