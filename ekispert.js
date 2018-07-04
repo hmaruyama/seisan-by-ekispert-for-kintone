@@ -29,7 +29,8 @@ jQuery(function($) {
   kintone.events.on(['app.record.edit.change.隠しパラメータ', 'app.record.create.change.隠しパラメータ'], function(event) {
     var changeRow = event.changes.row;
     var date = changeRow.value['日付'].value.replace(/-/g, '');
-    if(changeRow.value['隠しパラメータ'].value) {
+    if(!changeRow.value['隠しパラメータ'].value) { return; }
+    // if(changeRow.value['隠しパラメータ'].value) {
 
       var condition;
       var depStationPart;
@@ -172,6 +173,6 @@ jQuery(function($) {
           kintone.app.record.set(rec);
         })
       })
-    }
+    // }
   });
 });
