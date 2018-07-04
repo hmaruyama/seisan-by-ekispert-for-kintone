@@ -27,6 +27,13 @@ jQuery(function($) {
 
   kintone.events.on(['app.record.edit.change.隠しパラメータ', 'app.record.create.change.隠しパラメータ'], function(event) {
 
+    if ($('#course-result').length) { $('#course-result').remove(); }
+
+    var courseResultSpace = document.createElement('div');
+    courseResultSpace.id = 'course-result';
+    courseResultSpace.innerHTML = '何かしらテキストが入っていないと反映されない？';
+    kintone.app.record.getSpaceElement('course-result-space').appendChild(courseResultSpace);
+
     var changeRow = event.changes.row;
     var date = changeRow.value['日付'].value.replace(/-/g, '');
     if(!changeRow.value['隠しパラメータ'].value) { return; }
@@ -38,11 +45,6 @@ jQuery(function($) {
     var selectRoute = {};
     var depStation = {};
     var arrStation = {};
-
-    var courseResultSpace = document.createElement('div');
-    courseResultSpace.id = 'course-result';
-    courseResultSpace.innerHTML = '何かしらテキストが入っていないと反映されない？';
-    kintone.app.record.getSpaceElement('course-result-space').appendChild(courseResultSpace);
 
     swal({
       title: "駅を入力してください",
@@ -125,6 +127,20 @@ jQuery(function($) {
               type: "success"
             })
           });
+          courseResult.bind('close', function() {
+            // テーブル値の更新
+            var rec = kintone.app.record.get();
+            var tableRecord = rec.record['明細'].value;
+
+            for(var i = 0; i < tableRecord.length; i++) {
+              if(tableRecord[i].value['隠しパラメータ'].value == "true") {
+                tableRecord[i].value['入力方法'].value = "手入力";
+                tableRecord[i].value['隠しパラメータ'].value = "";
+              }
+            }
+            kintone.app.record.set(rec);
+            return;
+          })
           courseResult.search(searchObject, function(isSuccess) {
             if(!isSuccess){
               swal.showValidationError("探索結果が取得できませんでした");
@@ -151,75 +167,6 @@ jQuery(function($) {
         kintone.app.record.set(rec);
         return;
       }
-      //
-      // courseResult.bind('select', function(aaa) {
-      //   alert("経路が選択されました" + aaa);
-      //   alert(courseResult.getResultNo());
-      //   alert(courseResult.getResult());
-      //   courseResult.changeCourse(courseResult.getResultNo());
-      //   var onewayPrice = courseResult.getPrice(courseResult.PRICE_ONEWAY);
-      //   var pointList = courseResult.getPointList().split(',');
-      //   var lineList = courseResult.getLineList().split(',');
-      //   var routeStr = "";
-      //   for (var j = 0; j < pointList.length; j++) {
-      //     if (lineList[j]) {
-      //       routeStr += pointList[j] + " - [" + lineList[j] + "] - "
-      //     } else {
-      //       routeStr += pointList[j]
-      //     }
-      //   }
-      //   selectRoute = {
-      //     route: routeStr,
-      //     price: onewayPrice
-      //   }
-      // })
-
-
-      //
-      // swal({
-      //   title: '経路を選択してください',
-      //   input: 'radio',
-      //   inputOptions: inputOptions,
-      //   inputValidator: function(value) {
-      //     return !value && "経路を選択してください。"
-      //   }
-      // }).then(function (result) {
-        // if(!result.value){
-        //   // テーブル値の更新
-        //   var rec = kintone.app.record.get();
-        //   var tableRecord = rec.record['明細'].value;
-        //
-        //   for(var i = 0; i < tableRecord.length; i++) {
-        //     if(tableRecord[i].value['隠しパラメータ'].value == "true") {
-        //       tableRecord[i].value['入力方法'].value = "手入力";
-        //       tableRecord[i].value['隠しパラメータ'].value = "";
-        //     }
-        //   }
-        //   kintone.app.record.set(rec);
-        //   return;
-        //
-        // }
-
-
-        // テーブル値の更新
-        // var rec = kintone.app.record.get();
-        // var tableRecord = rec.record['明細'].value;
-        //
-        // for(var i = 0; i < tableRecord.length; i++) {
-        //   if(tableRecord[i].value['隠しパラメータ'].value == "true") {
-        //     tableRecord[i].value['経路'].value = selectRoutes[result.value].route;
-        //     tableRecord[i].value['金額'].value = selectRoutes[result.value].price;
-        //     tableRecord[i].value['隠しパラメータ'].value = "";
-        //     tableRecord[i].value['経路'].disabled = true;
-        //     tableRecord[i].value['金額'].disabled = true;
-        //   }
-        // }
-        // kintone.app.record.set(rec);
-
-
-      // })
-
-
     })
   });
 });
