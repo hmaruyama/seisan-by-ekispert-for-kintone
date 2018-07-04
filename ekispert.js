@@ -33,13 +33,14 @@ jQuery(function($) {
     var depStationPart;
     var arrStationPart;
     var courseResult;
-    var inputOptions = {};
-    var selectRoutes = {};
+    var courseTeiki;
+    var selectRoute = {};
     var depStation = {};
     var arrStation = {};
 
     var courseResultSpace = document.createElement('div');
     courseResultSpace.id = 'course-result';
+    courseResultSpace.innerHTML = '何かしらテキストが入っていないと反映されない？';
     kintone.app.record.getSpaceElement('course-result-space').appendChild(courseResultSpace);
 
     swal({
@@ -83,33 +84,15 @@ jQuery(function($) {
           searchObject.setSearchType('plain');
           searchObject.setConditionDetail(condition.getConditionDetail());
           searchObject.setViaList(depStation.code + ':' + arrStation.code);
-          if (kintone.app.record.get().record['通勤経路'].value) { // 通勤経路項目に値が入っていれば定期割り当てを行う
-            searchObject.setAssignDetailRoute(kintone.app.record.get().record['通勤経路'].value);
+          courseTeiki = kintone.app.record.get().record['通勤経路'].value;
+          if (courseTeiki) { // 通勤経路項目に値が入っていれば定期割り当てを行う
+            searchObject.setAssignDetailRoute(courseTeiki);
           }
           courseResult.search(searchObject, function(isSuccess) {
             if(!isSuccess){
               swal.showValidationError("探索結果が取得できませんでした");
               resolve();
               return;
-            }
-            for (var i = 1; i <= courseResult.getResultCount(); i++) {
-              courseResult.changeCourse(i);
-              var onewayPrice = courseResult.getPrice(courseResult.PRICE_ONEWAY);
-              var pointList = courseResult.getPointList().split(',');
-              var lineList = courseResult.getLineList().split(',');
-              var routeStr = "";
-              for (var j = 0; j < pointList.length; j++) {
-                if (lineList[j]) {
-                  routeStr += pointList[j] + " - [" + lineList[j] + "] - "
-                } else {
-                  routeStr += pointList[j]
-                }
-              }
-              selectRoutes[String(i)] = {
-                route: routeStr,
-                price: onewayPrice
-              }
-              inputOptions[String(i)] = routeStr + " 片道" +  onewayPrice + "円";
             }
             resolve();
           });
@@ -131,29 +114,57 @@ jQuery(function($) {
         kintone.app.record.set(rec);
         return;
       }
-      swal({
-        title: '経路を選択してください',
-        input: 'radio',
-        inputOptions: inputOptions,
-        inputValidator: function(value) {
-          return !value && "経路を選択してください。"
-        }
-      }).then(function (result) {
-        if(!result.value){
-          // テーブル値の更新
-          var rec = kintone.app.record.get();
-          var tableRecord = rec.record['明細'].value;
 
-          for(var i = 0; i < tableRecord.length; i++) {
-            if(tableRecord[i].value['隠しパラメータ'].value == "true") {
-              tableRecord[i].value['入力方法'].value = "手入力";
-              tableRecord[i].value['隠しパラメータ'].value = "";
-            }
+      courseResult.bind('select', function(aaa) {
+        alert("経路が選択されました" + aaa);
+        alert(courseResult.getResultNo());
+        alert(courseResult.getResult());
+        courseResult.changeCourse(courseResult.getResultNo());
+        var onewayPrice = courseResult.getPrice(courseResult.PRICE_ONEWAY);
+        var pointList = courseResult.getPointList().split(',');
+        var lineList = courseResult.getLineList().split(',');
+        var routeStr = "";
+        for (var j = 0; j < pointList.length; j++) {
+          if (lineList[j]) {
+            routeStr += pointList[j] + " - [" + lineList[j] + "] - "
+          } else {
+            routeStr += pointList[j]
           }
-          kintone.app.record.set(rec);
-          return;
-
         }
+        selectRoutes = {
+          route: routeStr,
+          price: onewayPrice
+        }
+      })
+
+
+      //
+      // swal({
+      //   title: '経路を選択してください',
+      //   input: 'radio',
+      //   inputOptions: inputOptions,
+      //   inputValidator: function(value) {
+      //     return !value && "経路を選択してください。"
+      //   }
+      // }).then(function (result) {
+        // if(!result.value){
+        //   // テーブル値の更新
+        //   var rec = kintone.app.record.get();
+        //   var tableRecord = rec.record['明細'].value;
+        //
+        //   for(var i = 0; i < tableRecord.length; i++) {
+        //     if(tableRecord[i].value['隠しパラメータ'].value == "true") {
+        //       tableRecord[i].value['入力方法'].value = "手入力";
+        //       tableRecord[i].value['隠しパラメータ'].value = "";
+        //     }
+        //   }
+        //   kintone.app.record.set(rec);
+        //   return;
+        //
+        // }
+
+
+
         swal({
           title: '受け付けました！',
           type: "success"
@@ -173,7 +184,7 @@ jQuery(function($) {
           }
         }
         kintone.app.record.set(rec);
-      })
+      // })
     })
   });
 });
