@@ -6,6 +6,7 @@ jQuery(function($) {
 
     var courseResultSpace = document.createElement('div');
     courseResultSpace.id = 'course-result';
+    courseResultSpace.innerHTML = 'スペース';
     kintone.app.record.getSpaceElement('course-result-space').appenChild(courseResultSpace);
 
     var table = event.record['明細'].value;
