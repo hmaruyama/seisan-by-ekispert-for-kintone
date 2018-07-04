@@ -3,12 +3,6 @@ jQuery(function($) {
 
   kintone.events.on(['app.record.edit.change.明細', 'app.record.create.change.明細', 'app.record.create.show', 'app.record.edit.show'], function(event) {
 
-
-    var courseResultSpace = document.createElement('div');
-    courseResultSpace.id = 'course-result';
-    courseResultSpace.innerHTML = 'スペース';
-    kintone.app.record.getSpaceElement('course-result-space').appendChild(courseResultSpace);
-
     var table = event.record['明細'].value;
     for (var i = 0; i < table.length; i++) {
       table[i].value['隠しパラメータ'].disabled = true;
@@ -46,13 +40,13 @@ jQuery(function($) {
     var depStation = {};
     var arrStation = {};
 
-    // var courseResultSpace = document.createElement('div');
-    // courseResultSpace.id = 'course-result';
-    // kintone.app.record.getSpaceElement('course-result-space').appendChild(courseResultSpace);
+    var courseResultSpace = document.createElement('div');
+    courseResultSpace.id = 'course-result';
+    kintone.app.record.getSpaceElement('course-result-space').appendChild(courseResultSpace);
 
     swal({
       title: "駅を入力してください",
-      html:'<div id="condition"></div>出発<div id="input-dep-station"></div>到着<div id="input-arr-station"></div><div id="course-result" style="display:none;">',
+      html:'<div id="condition"></div>出発<div id="input-dep-station"></div>到着<div id="input-arr-station"></div>',
       onOpen: function () {
         // 探索条件
         condition = new expGuiCondition(document.getElementById("condition"));
