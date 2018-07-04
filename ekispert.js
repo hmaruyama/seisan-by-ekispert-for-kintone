@@ -7,7 +7,7 @@ jQuery(function($) {
     var courseResultSpace = document.createElement('div');
     courseResultSpace.id = 'course-result';
     courseResultSpace.innerHTML = 'スペース';
-    kintone.app.record.getSpaceElement('course-result-space').appenChild(courseResultSpace);
+    kintone.app.record.getSpaceElement('course-result-space').appendChild(courseResultSpace);
 
     var table = event.record['明細'].value;
     for (var i = 0; i < table.length; i++) {
@@ -46,9 +46,9 @@ jQuery(function($) {
     var depStation = {};
     var arrStation = {};
 
-    var courseResultSpace = document.createElement('div');
-    courseResultSpace.id = 'course-result';
-    kintone.app.record.getSpaceElement('course-result-space').appenChild(courseResultSpace);
+    // var courseResultSpace = document.createElement('div');
+    // courseResultSpace.id = 'course-result';
+    // kintone.app.record.getSpaceElement('course-result-space').appendChild(courseResultSpace);
 
     swal({
       title: "駅を入力してください",
