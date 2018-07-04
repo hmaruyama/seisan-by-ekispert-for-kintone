@@ -28,8 +28,10 @@ jQuery(function($) {
 
   kintone.events.on(['app.record.edit.change.隠しパラメータ', 'app.record.create.change.隠しパラメータ'], function(event) {
     var changeRow = event.changes.row;
+    var date = changeRow.value['日付'].value.replace(/-/g, '');
     if(changeRow.value['隠しパラメータ'].value) {
 
+      var condition;
       var depStationPart;
       var arrStationPart;
       var courseResult;
@@ -40,8 +42,13 @@ jQuery(function($) {
 
       swal({
         title: "駅を入力してください",
-        html:'出発<div id="input-dep-station"></div>到着<div id="input-arr-station"></div><div id="course-result" style="display:none;">',
+        html:'<div id="condition"></div>出発<div id="input-dep-station"></div>到着<div id="input-arr-station"></div><div id="course-result" style="display:none;">',
         onOpen: function () {
+          // 探索条件
+          condition = new expGuiCondition(document.getElementById("condition"));
+          condition.setConfigure("ssl", true);
+          condition.dispCondition();
+
           // 出発駅
           depStationPart = new expGuiStation(document.getElementById("input-dep-station"));
           depStationPart.setConfigure("ssl", true);
@@ -66,9 +73,15 @@ jQuery(function($) {
               return;
             }
             var searchObject = courseResult.createSearchInterface();
-            searchObject.setAnswerCount(3);
+            searchObject.setAnswerCount(condition.getAnswerCount());
+            searchObject.setDate(date);
+            searchObject.setSort(condition.getSortType());
             searchObject.setSearchType('plain');
+            searchObject.setConditionDetail(condition.getConditionDetail());
             searchObject.setViaList(depStation.code + ':' + arrStation.code);
+            if (kintone.app.record.get().record['通勤経路'].value) { // 通勤経路項目に値が入っていれば定期割り当てを行う
+              searchObject.setAssignDetailRoute(kintone.app.record.get().record['通勤経路'].value);
+            }
             courseResult.search(searchObject, function(isSuccess) {
               if(!isSuccess){
                 swal.showValidationError("探索結果が取得できませんでした");
