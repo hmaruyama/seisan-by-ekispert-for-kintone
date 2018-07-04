@@ -35,16 +35,18 @@ jQuery(function($) {
     kintone.app.record.getSpaceElement('course-result-space').appendChild(courseResultSpace);
 
     var changeRow = event.changes.row;
-    var date = changeRow.value['日付'].value.replace(/-/g, '');
     if(!changeRow.value['隠しパラメータ'].value) { return; }
+
+    var date = changeRow.value['日付'].value.replace(/-/g, '');
     var condition;
     var depStationPart;
     var arrStationPart;
     var courseResult;
-    var courseTeiki;
+    var date;
+    var teikiCourse;
+    var depStationCode;
+    var arrStationCode;
     var selectRoute = {};
-    var depStation = {};
-    var arrStation = {};
 
     swal({
       title: "駅を入力してください",
@@ -73,24 +75,22 @@ jQuery(function($) {
       },
       preConfirm: function () {
         return new Promise(function (resolve) {
-          depStation.code = depStationPart.getStationCode();
-          arrStation.code = arrStationPart.getStationCode();
-          if (!depStation.code || !arrStation.code) {
+          depStationCode = depStationPart.getStationCode();
+          arrStationCode = arrStationPart.getStationCode();
+          if (!depStationCode || !arrStationCode) {
             swal.showValidationError("駅を選択してください。");
             resolve();
             return;
           }
+          teikiCourse = kintone.app.record.get().record['通勤経路'].value;
           var searchObject = courseResult.createSearchInterface();
           searchObject.setAnswerCount(condition.getAnswerCount());
           searchObject.setDate(date);
           searchObject.setSort(condition.getSortType());
           searchObject.setSearchType('plain');
           searchObject.setConditionDetail(condition.getConditionDetail());
-          searchObject.setViaList(depStation.code + ':' + arrStation.code);
-          courseTeiki = kintone.app.record.get().record['通勤経路'].value;
-          if (courseTeiki) { // 通勤経路項目に値が入っていれば定期割り当てを行う
-            searchObject.setAssignDetailRoute(courseTeiki);
-          }
+          searchObject.setViaList(depStationCode + ':' + arrStationCode);
+          if (teikiCourse) { searchObject.setAssignDetailRoute(teikiCourse); }
           courseResult.bind('select', function() {
             courseResult.changeCourse(courseResult.getResultNo());
             var onewayPrice = courseResult.getPrice(courseResult.PRICE_ONEWAY);
@@ -152,7 +152,7 @@ jQuery(function($) {
         })
       }
     }).then(function (result) {
-      if (!depStation.code || !arrStation.code) {
+      if (!depStationCode || !arrStationCode) {
 
         // テーブル値の更新
         var rec = kintone.app.record.get();
