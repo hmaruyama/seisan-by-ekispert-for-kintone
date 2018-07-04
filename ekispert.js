@@ -90,6 +90,7 @@ jQuery(function($) {
           searchObject.setSearchType('plain');
           searchObject.setConditionDetail(condition.getConditionDetail());
           searchObject.setViaList(depStationCode + ':' + arrStationCode);
+          searchObject.setPriceType(condition.getPriceType());
           if (teikiCourse) { searchObject.setAssignDetailRoute(teikiCourse); }
           courseResult.bind('select', function() {
             courseResult.changeCourse(courseResult.getResultNo());
