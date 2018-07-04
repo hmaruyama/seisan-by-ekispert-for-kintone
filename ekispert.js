@@ -2,7 +2,6 @@ jQuery(function($) {
   "use strict";
 
   kintone.events.on(['app.record.edit.change.明細', 'app.record.create.change.明細', 'app.record.create.show', 'app.record.edit.show'], function(event) {
-
     var table = event.record['明細'].value;
     for (var i = 0; i < table.length; i++) {
       table[i].value['隠しパラメータ'].disabled = true;
@@ -15,7 +14,6 @@ jQuery(function($) {
   });
 
   kintone.events.on(['app.record.edit.change.入力方法', 'app.record.create.change.入力方法'], function(event) {
-
     var changeRow = event.changes.row;
     if(changeRow.value['入力方法'].value == "駅すぱあと") {
       // 編集中のテーブル行をマーク
