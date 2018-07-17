@@ -31,7 +31,6 @@ jQuery(function($) {
 
     var courseResultSpace = document.createElement('div');
     courseResultSpace.id = 'course-result';
-    courseResultSpace.innerHTML = '何かしらテキストが入っていないと反映されない？';
     kintone.app.record.getSpaceElement('course-result-space').appendChild(courseResultSpace);
 
     var changeRow = event.changes.row;
@@ -55,21 +54,25 @@ jQuery(function($) {
         // 探索条件
         condition = new expGuiCondition(document.getElementById("condition"));
         condition.setConfigure("ssl", true);
+        condition.setConfigure("key", ekispert.accessKey);
         condition.dispCondition();
 
         // 出発駅
         depStationPart = new expGuiStation(document.getElementById("input-dep-station"));
         depStationPart.setConfigure("ssl", true);
+        depStationPart.setConfigure("key", ekispert.accessKey);
         depStationPart.dispStation();
 
         // 到着駅
         arrStationPart = new expGuiStation(document.getElementById("input-arr-station"));
         arrStationPart.setConfigure("ssl", true);
+        arrStationPart.setConfigure("key", ekispert.accessKey);
         arrStationPart.dispStation();
 
         // 探索結果
         courseResult = new expGuiCourse(document.getElementById("course-result"));
         courseResult.setConfigure("ssl", true);
+        courseResult.setConfigure("key", ekispert.accessKey);
         courseResult.setConfigure("window", true);
 
       },
