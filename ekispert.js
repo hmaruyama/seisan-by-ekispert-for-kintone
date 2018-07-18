@@ -41,7 +41,6 @@ jQuery(function($) {
     var depStationPart;
     var arrStationPart;
     var courseResult;
-    var date;
     var teikiCourse;
     var depStationCode;
     var arrStationCode;
