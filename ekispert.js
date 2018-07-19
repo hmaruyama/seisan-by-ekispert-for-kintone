@@ -5,6 +5,7 @@
     var table = event.record['明細'].value;
     for (var i = 0; i < table.length; i++) {
       table[i].value['隠しパラメータ'].disabled = true;
+      table[i].value['経路の詳細'].disabled = true;
       if(table[i].value['入力方法'].value == "駅すぱあと") {
         table[i].value['経路'].disabled = true;
         table[i].value['金額'].disabled = true;
@@ -41,6 +42,7 @@
     var depStationPart;
     var arrStationPart;
     var courseResult;
+    var courseResultJson;
     var teikiCourse;
     var depStationCode;
     var arrStationCode;
@@ -96,6 +98,7 @@
           if (teikiCourse) { searchObject.setAssignDetailRoute(teikiCourse); }
           courseResult.bind('select', function() {
             courseResult.changeCourse(courseResult.getResultNo());
+            courseResultJson = courseResult.getResult();
             var onewayPrice = courseResult.getPrice(courseResult.PRICE_ONEWAY);
             var pointList = courseResult.getPointList().split(',');
             var lineList = courseResult.getLineList().split(',');
@@ -111,24 +114,50 @@
               route: routeStr,
               price: onewayPrice
             }
-            // テーブル値の更新
-            var rec = kintone.app.record.get();
-            var tableRecord = rec.record['明細'].value;
 
-            for(var i = 0; i < tableRecord.length; i++) {
-              if(tableRecord[i].value['隠しパラメータ'].value == "true") {
-                tableRecord[i].value['経路'].value = selectRoute.route;
-                tableRecord[i].value['金額'].value = selectRoute.price;
-                tableRecord[i].value['隠しパラメータ'].value = "";
-                tableRecord[i].value['経路'].disabled = true;
-                tableRecord[i].value['金額'].disabled = true;
+
+            // 交通費精算詳細アプリへ経路詳細データをPOST
+            var params = {
+              "app": 10,
+              "record": {
+                "経路表示データ": {"value": JSON.stringify(courseResultJson) }
               }
-            }
-            kintone.app.record.set(rec);
-            swal({
-              title: '受け付けました！',
-              type: "success"
-            })
+            };
+
+
+            kintone.api(kintone.api.url('/k/v1/record', true), 'POST', params,function(resp) {
+
+              // テーブル値の更新
+              var rec = kintone.app.record.get();
+              var tableRecord = rec.record['明細'].value;
+
+              for(var i = 0; i < tableRecord.length; i++) {
+                if(tableRecord[i].value['隠しパラメータ'].value == "true") {
+                  tableRecord[i].value['経路'].value = selectRoute.route;
+                  tableRecord[i].value['金額'].value = selectRoute.price;
+                  tableRecord[i].value['経路の詳細'].value = resp.id;
+                  tableRecord[i].value['経路の詳細'].lookup = true;
+                  tableRecord[i].value['隠しパラメータ'].value = "";
+                  tableRecord[i].value['経路'].disabled = true;
+                  tableRecord[i].value['金額'].disabled = true;
+                }
+              }
+              kintone.app.record.set(rec);
+
+              swal({
+                type: "success",
+                text: '受け付けました！'
+              })
+            },
+            function(resp) {
+              swal({
+                type: 'error',
+                text: '交通費申請詳細アプリへの書き込みに失敗しました。'
+              })
+            });
+
+
+
           });
           courseResult.bind('close', function() {
             // テーブル値の更新
