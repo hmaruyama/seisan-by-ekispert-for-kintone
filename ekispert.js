@@ -37,7 +37,6 @@
     if(!changeRow.value['隠しパラメータ'].value) { return; }
 
     var date = changeRow.value['日付'].value.replace(/-/g, '');
-    var conditionPart;
     var depStationPart;
     var arrStationPart;
     var coursePart;
@@ -45,6 +44,7 @@
     var depStationCode;
     var arrStationCode;
     var selectRoute = {};
+    var conditionPart;
 
     swal({
       title: '駅を入力してください',
@@ -86,12 +86,12 @@
           }
           teikiCourse = kintone.app.record.get().record['通勤経路'].value;
           var searchObject = coursePart.createSearchInterface();
-          searchObject.setAnswerCount(conditionPart.getAnswerCount());
           searchObject.setDate(date);
-          searchObject.setSort(conditionPart.getSortType());
           searchObject.setSearchType('plain');
-          searchObject.setConditionDetail(conditionPart.getConditionDetail());
           searchObject.setViaList(depStationCode + ':' + arrStationCode);
+          searchObject.setAnswerCount(conditionPart.getAnswerCount());
+          searchObject.setSort(conditionPart.getSortType());
+          searchObject.setConditionDetail(conditionPart.getConditionDetail());
           searchObject.setPriceType(conditionPart.getPriceType());
           if (teikiCourse) { searchObject.setAssignDetailRoute(teikiCourse); }
           coursePart.bind('select', function() {
