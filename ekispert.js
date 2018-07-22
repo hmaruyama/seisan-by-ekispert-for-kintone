@@ -3,11 +3,14 @@
 
   // 駅すぱあとWebサービスのアクセスキー
   var ekispertAccessKey = '';
+  // 交通費申請詳細アプリID
+  var detailAppId = '';
 
   kintone.events.on(['app.record.edit.change.明細', 'app.record.create.change.明細', 'app.record.create.show', 'app.record.edit.show'], function(event) {
     var table = event.record['明細'].value;
     for (var i = 0; i < table.length; i++) {
       table[i].value['隠しパラメータ'].disabled = true;
+      table[i].value['経路の詳細'].disabled = true;
       if(table[i].value['入力方法'].value == '駅すぱあと') {
         table[i].value['経路'].disabled = true;
         table[i].value['金額'].disabled = true;
@@ -48,6 +51,7 @@
     var arrStationCode;
     var selectRoute = {};
     var conditionPart;
+    var courseResultJson;
 
     swal({
       title: '駅を入力してください',
@@ -100,6 +104,7 @@
           if (teikiSerializeData) { searchObject.setAssignTeikiSerializeData(teikiSerializeData); }
           coursePart.bind('select', function() {
             coursePart.changeCourse(coursePart.getResultNo());
+            courseResultJson = coursePart.getResult();
             var onewayPrice = coursePart.getPrice(coursePart.PRICE_ONEWAY);
             var pointList = coursePart.getPointList().split(',');
             var lineList = coursePart.getLineList().split(',');
@@ -115,24 +120,55 @@
               route: routeStr,
               price: onewayPrice
             }
-            // テーブル値の更新
-            var rec = kintone.app.record.get();
-            var tableRecord = rec.record['明細'].value;
 
-            for(var i = 0; i < tableRecord.length; i++) {
-              if(tableRecord[i].value['隠しパラメータ'].value == 'true') {
-                tableRecord[i].value['経路'].value = selectRoute.route;
-                tableRecord[i].value['金額'].value = selectRoute.price;
-                tableRecord[i].value['隠しパラメータ'].value = '';
-                tableRecord[i].value['経路'].disabled = true;
-                tableRecord[i].value['金額'].disabled = true;
+            // 交通費申請詳細アプリへ経路詳細データをPOST
+            var params = {
+              "app": detailAppId,
+              "record": {
+                "経路表示データ": {"value": JSON.stringify(courseResultJson) }
               }
-            }
-            kintone.app.record.set(rec);
-            swal({
-              title: '受け付けました！',
-              type: 'success'
-            })
+            };
+            kintone.api(kintone.api.url('/k/v1/record', true), 'POST', params,function(resp) {
+
+              // テーブル値の更新
+              var rec = kintone.app.record.get();
+              var tableRecord = rec.record['明細'].value;
+
+              for(var i = 0; i < tableRecord.length; i++) {
+                if(tableRecord[i].value['隠しパラメータ'].value == "true") {
+                  tableRecord[i].value['経路'].value = selectRoute.route;
+                  tableRecord[i].value['金額'].value = selectRoute.price;
+                  tableRecord[i].value['経路の詳細'].value = resp.id;
+                  tableRecord[i].value['経路の詳細'].lookup = true;
+                  tableRecord[i].value['隠しパラメータ'].value = "";
+                  tableRecord[i].value['経路'].disabled = true;
+                  tableRecord[i].value['金額'].disabled = true;
+                }
+              }
+              kintone.app.record.set(rec);
+
+              swal({
+                type: 'success',
+                text: '受け付けました！'
+              })
+            },
+            function(resp) {
+              swal({
+                type: 'error',
+                text: '交通費申請詳細アプリへの書き込みに失敗しました。'
+              })
+              // テーブル値の更新
+              var rec = kintone.app.record.get();
+              var tableRecord = rec.record['明細'].value;
+
+              for(var i = 0; i < tableRecord.length; i++) {
+                if(tableRecord[i].value['隠しパラメータ'].value == 'true') {
+                  tableRecord[i].value['入力方法'].value = '手入力';
+                  tableRecord[i].value['隠しパラメータ'].value = '';
+                }
+              }
+              kintone.app.record.set(rec);
+            });
           });
           coursePart.bind('close', function() {
             // テーブル値の更新
