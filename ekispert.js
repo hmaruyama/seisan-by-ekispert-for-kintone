@@ -47,10 +47,11 @@
     var depStationCode;
     var arrStationCode;
     var selectRoute = {};
+    var conditionPart;
 
     swal({
       title: '駅を入力してください',
-      html:'出発<div id="input-dep-station"></div>到着<div id="input-arr-station"></div>',
+      html:'<div id="condition"></div>出発<div id="input-dep-station"></div>到着<div id="input-arr-station"></div>',
       onOpen: function () {
         // 出発駅
         depStationPart = new expGuiStation(document.getElementById('input-dep-station'));
@@ -71,6 +72,12 @@
         coursePart.setConfigure('window', true);
         coursePart.setConfigure('checkEngineVersion', false);
 
+        // 探索条件
+        conditionPart = new expGuiCondition(document.getElementById('condition'));
+        conditionPart.setConfigure('ssl', true);
+        conditionPart.setConfigure('key', ekispertAccessKey);
+        conditionPart.dispCondition();
+
       },
       preConfirm: function () {
         return new Promise(function (resolve) {
@@ -86,6 +93,10 @@
           searchObject.setDate(date);
           searchObject.setSearchType('plain');
           searchObject.setViaList(depStationCode + ':' + arrStationCode);
+          searchObject.setAnswerCount(conditionPart.getAnswerCount());
+          searchObject.setSort(conditionPart.getSortType());
+          searchObject.setConditionDetail(conditionPart.getConditionDetail());
+          searchObject.setPriceType(conditionPart.getPriceType());
           if (teikiSerializeData) { searchObject.setAssignTeikiSerializeData(teikiSerializeData); }
           coursePart.bind('select', function() {
             coursePart.changeCourse(coursePart.getResultNo());
