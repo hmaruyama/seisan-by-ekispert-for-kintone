@@ -59,19 +59,19 @@
         // 出発駅
         depStationPart = new expGuiStation(document.getElementById('input-dep-station'));
         depStationPart.setConfigure('ssl', true);
-        depStationPart.setConfigure('key', ekispert.accessKey);
+        depStationPart.setConfigure('key', ekispertAccessKey);
         depStationPart.dispStation();
 
         // 到着駅
         arrStationPart = new expGuiStation(document.getElementById('input-arr-station'));
         arrStationPart.setConfigure('ssl', true);
-        arrStationPart.setConfigure('key', ekispert.accessKey);
+        arrStationPart.setConfigure('key', ekispertAccessKey);
         arrStationPart.dispStation();
 
         // 探索結果
         coursePart = new expGuiCourse(document.getElementById('course-result'));
         coursePart.setConfigure('ssl', true);
-        coursePart.setConfigure('key', ekispert.accessKey);
+        coursePart.setConfigure('key', ekispertAccessKey);
         coursePart.setConfigure('window', true);
 
       },
@@ -147,6 +147,18 @@
           coursePart.search(searchObject, function(isSuccess) {
             if(!isSuccess){
               swal.showValidationError('探索結果が取得できませんでした');
+
+              // テーブル値の更新
+              var rec = kintone.app.record.get();
+              var tableRecord = rec.record['明細'].value;
+
+              for(var i = 0; i < tableRecord.length; i++) {
+                if(tableRecord[i].value['隠しパラメータ'].value == 'true') {
+                  tableRecord[i].value['入力方法'].value = '手入力';
+                  tableRecord[i].value['隠しパラメータ'].value = '';
+                }
+              }
+              kintone.app.record.set(rec);
               resolve();
               return;
             }
