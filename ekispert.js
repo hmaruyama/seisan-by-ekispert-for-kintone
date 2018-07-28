@@ -1,6 +1,9 @@
 (function($) {
   "use strict";
 
+  // 駅すぱあとWebサービスのアクセスキー
+  var ekispertAccessKey = '';
+
   kintone.events.on(['app.record.edit.change.明細', 'app.record.create.change.明細', 'app.record.create.show', 'app.record.edit.show'], function(event) {
     var table = event.record['明細'].value;
     for (var i = 0; i < table.length; i++) {
@@ -50,12 +53,6 @@
       title: '駅を入力してください',
       html:'<div id="condition"></div>出発<div id="input-dep-station"></div>到着<div id="input-arr-station"></div>',
       onOpen: function () {
-        // 探索条件
-        conditionPart = new expGuiCondition(document.getElementById('condition'));
-        conditionPart.setConfigure('ssl', true);
-        conditionPart.setConfigure('key', ekispert.accessKey);
-        conditionPart.dispCondition();
-
         // 出発駅
         depStationPart = new expGuiStation(document.getElementById('input-dep-station'));
         depStationPart.setConfigure('ssl', true);
@@ -73,6 +70,12 @@
         coursePart.setConfigure('ssl', true);
         coursePart.setConfigure('key', ekispertAccessKey);
         coursePart.setConfigure('window', true);
+
+        // 探索条件
+        conditionPart = new expGuiCondition(document.getElementById('condition'));
+        conditionPart.setConfigure('ssl', true);
+        conditionPart.setConfigure('key', ekispertAccessKey);
+        conditionPart.dispCondition();
 
       },
       preConfirm: function () {
