@@ -43,7 +43,7 @@
     var depStationPart;
     var arrStationPart;
     var coursePart;
-    var teikiCourse;
+    var teikiSerializeData;
     var depStationCode;
     var arrStationCode;
     var selectRoute = {};
@@ -70,6 +70,7 @@
         coursePart.setConfigure('ssl', true);
         coursePart.setConfigure('key', ekispertAccessKey);
         coursePart.setConfigure('window', true);
+        coursePart.setConfigure('checkEngineVersion', false);
 
         // 探索条件
         conditionPart = new expGuiCondition(document.getElementById('condition'));
@@ -87,7 +88,7 @@
             resolve();
             return;
           }
-          teikiCourse = kintone.app.record.get().record['通勤経路'].value;
+          teikiSerializeData = kintone.app.record.get().record['通勤経路'].value;
           var searchObject = coursePart.createSearchInterface();
           searchObject.setDate(date);
           searchObject.setSearchType('plain');
@@ -96,7 +97,7 @@
           searchObject.setSort(conditionPart.getSortType());
           searchObject.setConditionDetail(conditionPart.getConditionDetail());
           searchObject.setPriceType(conditionPart.getPriceType());
-          if (teikiCourse) { searchObject.setAssignDetailRoute(teikiCourse); }
+          if (teikiSerializeData) { searchObject.setAssignTeikiSerializeData(teikiSerializeData); }
           coursePart.bind('select', function() {
             coursePart.changeCourse(coursePart.getResultNo());
             var onewayPrice = coursePart.getPrice(coursePart.PRICE_ONEWAY);
